@@ -14,6 +14,13 @@
 #import "AGImagePickerController.h"
 #import "AGIPCAssetsController.h"
 
+#import "UIUtils.h"
+#import "NimbusCore.h"
+
+#import "PhotoPickerAlbumCell.h"
+
+static NSString *PhotoAlbumCellIdentifier = @"Cell";
+
 @interface AGIPCAlbumsController ()
 {
     NSMutableArray *_assetsGroups;
@@ -98,8 +105,28 @@
     [self registerForNotifications];
     
     // Navigation Bar Items
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
-	self.navigationItem.leftBarButtonItem = cancelButton;
+    UIButton *cancelButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"CANCEL_BUTTON_TITLE", nil)];
+    [cancelButton addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
+	self.navigationItem.rightBarButtonItem = cancelButtonItem;
+    
+    [self.navigationController.navigationBar setBackgroundImage:[UIUtils
+                                                                 imageWithSize:self.navigationController.navigationBar.frame.size
+                                                                 andColor:[UIColor whiteColor]]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+    [self.navigationController.navigationBar setTranslucent:NO];
+    
+    UIColor *grayTitleColor = RGBCOLOR(51.0, 51.0, 51.0);
+    [self.navigationController.navigationBar setTitleTextAttributes:@{UITextAttributeTextColor : grayTitleColor,
+                                   UITextAttributeTextShadowOffset : [NSValue valueWithUIOffset:UIOffsetZero],
+                                                UITextAttributeFont: [UIFont systemFontOfSize:19.0]}];
+    
+    self.title = NSLocalizedString(@"ALBUM_SCREEN_TITLE", nil);
+    
+    UINib *cellNib = [UINib nibWithNibName:@"PhotoPickerAlbumCell" bundle:nil];
+    [self.tableView registerNib:cellNib forCellReuseIdentifier:PhotoAlbumCellIdentifier];
 }
 
 - (void)viewDidUnload
@@ -128,24 +155,29 @@
     self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Loading", nil, [NSBundle mainBundle], @"Loading...", nil);
 }
 
+// This method is not tested because ALAssets do not work with Cedar and cannot be faked
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-    }
-    
+{        
     ALAssetsGroup *group = (self.assetsGroups)[indexPath.row];
     [group setAssetsFilter:[ALAssetsFilter allPhotos]];
-    NSUInteger numberOfAssets = group.numberOfAssets;
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [group valueForProperty:ALAssetsGroupPropertyName]];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", numberOfAssets];
-    [cell.imageView setImage:[UIImage imageWithCGImage:[(ALAssetsGroup *)self.assetsGroups[indexPath.row] posterImage]]];
+    NSString *title = [group valueForProperty:ALAssetsGroupPropertyName];
+    NSUInteger numberOfAssets = group.numberOfAssets;
+    CGImageRef imageRef = [(ALAssetsGroup *)self.assetsGroups[indexPath.row] posterImage];
+    
+    PhotoPickerAlbumCell *cell = [self cellWithTitle:title count:numberOfAssets image:imageRef];
+    return cell;
+}
+
+- (PhotoPickerAlbumCell *)cellWithTitle:(NSString *)title count:(NSInteger)count image:(CGImageRef)imageRef
+{
+    PhotoPickerAlbumCell *cell = [self.tableView dequeueReusableCellWithIdentifier:PhotoAlbumCellIdentifier];
+
+    cell.titleLabel.text = [NSString stringWithFormat:@"%@", title];
+    cell.countLabel.text = [NSString stringWithFormat:@"(%d)", count];
+    [cell.albumImageView setImage:[UIImage imageWithCGImage:imageRef]];
 	[cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
-	
+    [cell setupUI];
     return cell;
 }
 
@@ -161,7 +193,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {	
-	return 57;
+	return 46;
 }
 
 #pragma mark - Private
@@ -217,7 +249,7 @@
 - (void)reloadData
 {
     [self.tableView reloadData];
-    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Albums", nil, [NSBundle mainBundle], @"Albums", nil);
+    self.title = NSLocalizedString(@"ALBUM_SCREEN_TITLE", nil);
 }
 
 - (void)cancelAction:(id)sender
