@@ -207,13 +207,14 @@
 
 - (CGRect)checkmarkFrameUsingItemFrame:(CGRect)frame
 {
-    CGRect checkmarkRect = AGIPC_CHECKMARK_RECT;
+    float checkmarkFrameWidth = 19;
+    float checkmarkFrameHeight = 18;
     
     return CGRectMake(
-                      frame.size.width - checkmarkRect.size.width - checkmarkRect.origin.x,
-                      frame.size.height - checkmarkRect.size.height - checkmarkRect.origin.y,
-                      checkmarkRect.size.width,
-                      checkmarkRect.size.height
+                      (frame.size.width - checkmarkFrameWidth) / 2.0f,
+                      (frame.size.height - checkmarkFrameHeight) / 2.0f,
+                      checkmarkFrameWidth,
+                      checkmarkFrameHeight
                       );
 }
 

@@ -36,14 +36,14 @@
 #define SELECTION_BEHAVIOR_IN_SINGLE_SELECTION_MODE                             0
 
 // Size in points
-#define AGIPC_CHECKMARK_WIDTH                                                   28.f
-#define AGIPC_CHECKMARK_HEIGHT                                                  28.f
-#define AGIPC_CHECKMARK_RIGHT_MARGIN                                            4.f
-#define AGIPC_CHECKMARK_BOTTOM_MARGIN                                           4.f
-
-#define AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT                                      CGPointMake(AGIPC_CHECKMARK_RIGHT_MARGIN, AGIPC_CHECKMARK_BOTTOM_MARGIN)
-#define AGIPC_CHECKMARK_SIZE                                                    CGSizeMake(AGIPC_CHECKMARK_WIDTH, AGIPC_CHECKMARK_HEIGHT)
-#define AGIPC_CHECKMARK_RECT                                                    CGRectMake(AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT.x, AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT.y, AGIPC_CHECKMARK_SIZE.width, AGIPC_CHECKMARK_SIZE.height)
+//#define AGIPC_CHECKMARK_WIDTH                                                   28.f
+//#define AGIPC_CHECKMARK_HEIGHT                                                  28.f
+//#define AGIPC_CHECKMARK_RIGHT_MARGIN                                            4.f
+//#define AGIPC_CHECKMARK_BOTTOM_MARGIN                                           4.f
+//
+//#define AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT                                      CGPointMake(AGIPC_CHECKMARK_RIGHT_MARGIN, AGIPC_CHECKMARK_BOTTOM_MARGIN)
+//#define AGIPC_CHECKMARK_SIZE                                                    CGSizeMake(AGIPC_CHECKMARK_WIDTH, AGIPC_CHECKMARK_HEIGHT)
+//#define AGIPC_CHECKMARK_RECT                                                    CGRectMake(AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT.x, AGIPC_CHECKMARK_BOTTOM_RIGHT_POINT.y, AGIPC_CHECKMARK_SIZE.width, AGIPC_CHECKMARK_SIZE.height)
 
 #define AGIPC_ITEMS_PER_ROW_IPHONE_PORTRAIT                                     4
 #define AGIPC_ITEMS_PER_ROW_IPHONE_LANDSCAPE                                    6

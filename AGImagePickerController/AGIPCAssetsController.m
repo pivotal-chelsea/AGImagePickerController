@@ -15,6 +15,8 @@
 
 #import "AGIPCGridCell.h"
 #import "AGIPCToolbarItem.h"
+#import "UIUtils.h"
+#import "NimbusCore.h"
 
 @interface AGIPCAssetsController ()
 {
@@ -228,9 +230,34 @@
     
     // Setup Notifications
     [self registerForNotifications];
+
+    [self.navigationController.navigationBar setBackgroundImage:[UIUtils
+                                                                 imageWithSize:self.navigationController.navigationBar.frame.size
+                                                                 andColor:[UIColor whiteColor]]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+    [self.navigationController.navigationBar setTranslucent:NO];
+    
+    UIColor *grayTitleColor = RGBCOLOR(51.0, 51.0, 51.0);
+    [self.navigationController.navigationBar setTitleTextAttributes:@{UITextAttributeTextColor : grayTitleColor,
+                                   UITextAttributeTextShadowOffset : [NSValue valueWithUIOffset:UIOffsetZero],
+                                                UITextAttributeFont: [UIFont systemFontOfSize:19.0]}];
     
     // Navigation Bar Items
-    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
+    [UIUtils addLeftBarButtonFor:self
+                withDefaultImage:@"blank_btn_back.png"
+                      andOnImage:@"blank_btn_back_tap.png"
+                      withAction:@selector(dismissView:)
+                           title:NSLocalizedString(@"ALBUM_SCREEN_TITLE", nil)];
+    
+    // Shift leftBarButton title to right
+    UIButton *innerBtn = (UIButton *)self.navigationItem.leftBarButtonItem.customView;
+    [innerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 8.0f, 0.0f, 0.0f)];
+    
+    UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
+    [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     doneButtonItem.enabled = NO;
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
     
@@ -335,6 +362,11 @@
 - (void)doneAction:(id)sender
 {
     [self.imagePickerController performSelector:@selector(didFinishPickingAssets:) withObject:self.selectedAssets];
+}
+
+- (void)dismissView:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:ANIMATE];
 }
 
 - (void)selectAllAction:(id)sender

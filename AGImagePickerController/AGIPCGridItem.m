@@ -28,8 +28,6 @@
 }
 
 @property (nonatomic, strong) UIImageView *thumbnailImageView;
-@property (nonatomic, strong) UIView *selectionView;
-@property (nonatomic, strong) UIImageView *checkmarkImageView;
 
 + (void)resetNumberOfSelections;
 
@@ -144,17 +142,14 @@ static NSUInteger numberOfSelectedGridItems = 0;
 		[self addSubview:self.thumbnailImageView];
         
         self.selectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.selectionView.backgroundColor = [UIColor whiteColor];
+        self.selectionView.backgroundColor = [UIColor blackColor];
         self.selectionView.alpha = .5f;
         self.selectionView.hidden = !self.selected;
         [self addSubview:self.selectionView];
         
         // Position the checkmark image in the bottom right corner
         self.checkmarkImageView = [[UIImageView alloc] initWithFrame:checkmarkFrame];
-        if (IS_IPAD())
-            self.checkmarkImageView.image = [UIImage imageNamed:@"AGImagePickerController.bundle/AGIPC-Checkmark-iPad"];
-        else
-            self.checkmarkImageView.image = [UIImage imageNamed:@"AGImagePickerController.bundle/AGIPC-Checkmark-iPhone"];
+        self.checkmarkImageView.image = [UIImage imageNamed:@"icon_white_teak.png"];
         self.checkmarkImageView.hidden = !self.selected;
 		[self addSubview:self.checkmarkImageView];
         

@@ -32,6 +32,8 @@
 
 @property (assign) BOOL selected;
 @property (strong) ALAsset *asset;
+@property (nonatomic, strong) UIView *selectionView;
+@property (nonatomic, strong) UIImageView *checkmarkImageView;
 
 @property (nonatomic, ag_weak) id<AGIPCGridItemDelegate> delegate;
 
