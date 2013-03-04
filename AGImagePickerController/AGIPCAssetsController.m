@@ -233,6 +233,8 @@
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
     doneButtonItem.enabled = NO;
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
+    
+    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
 }
 
 - (void)viewDidUnload
