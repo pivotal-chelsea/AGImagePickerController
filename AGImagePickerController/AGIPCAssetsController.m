@@ -216,25 +216,11 @@
     // Reset the number of selections
     [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
     
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // Fullscreen
-    if (self.imagePickerController.shouldChangeStatusBarStyle) {
-        self.wantsFullScreenLayout = YES;
-    }
-    
-    // Setup Notifications
-    [self registerForNotifications];
-
     [self.navigationController.navigationBar setBackgroundImage:[UIUtils
                                                                  imageWithSize:self.navigationController.navigationBar.frame.size
                                                                  andColor:[UIColor whiteColor]]
                                                   forBarMetrics:UIBarMetricsDefault];
+    
     [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
     [self.navigationController.navigationBar setTranslucent:NO];
     
@@ -256,10 +242,25 @@
     
     UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
     [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
-        
+    
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     doneButtonItem.enabled = NO;
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
+    
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // Fullscreen
+    if (self.imagePickerController.shouldChangeStatusBarStyle) {
+        self.wantsFullScreenLayout = YES;
+    }
+    
+    // Setup Notifications
+    [self registerForNotifications];
     
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
 }

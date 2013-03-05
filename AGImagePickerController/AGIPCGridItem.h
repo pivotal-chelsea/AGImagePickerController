@@ -35,7 +35,7 @@
 @property (nonatomic, strong) UIView *selectionView;
 @property (nonatomic, strong) UIImageView *checkmarkImageView;
 
-@property (nonatomic, ag_weak) id<AGIPCGridItemDelegate> delegate;
+@property (nonatomic, weak) id<AGIPCGridItemDelegate> delegate;
 
 @property (strong) AGImagePickerController *imagePickerController;
 

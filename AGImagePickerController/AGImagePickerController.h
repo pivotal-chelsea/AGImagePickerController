@@ -42,7 +42,7 @@ shouldShowToolbarForManagingTheSelectionInSelectionMode:(AGImagePickerController
 
 @interface AGImagePickerController : UINavigationController
 {
-    id __ag_weak _pickerDelegate;
+    id __weak _pickerDelegate;
     
     struct {
         unsigned int delegateSelectionBehaviorInSingleSelectionMode:1;
@@ -70,7 +70,7 @@ shouldShowToolbarForManagingTheSelectionInSelectionMode:(AGImagePickerController
 @property (nonatomic) BOOL shouldShowSavedPhotosOnTop;
 @property (nonatomic) NSUInteger maximumNumberOfPhotosToBeSelected;
 
-@property (nonatomic, ag_weak) id delegate;
+@property (nonatomic, weak) id delegate;
 
 @property (nonatomic, copy) AGIPCDidFail didFailBlock;
 @property (nonatomic, copy) AGIPCDidFinish didFinishBlock;
