@@ -239,6 +239,9 @@
     // Shift leftBarButton title to right
     UIButton *innerBtn = (UIButton *)self.navigationItem.leftBarButtonItem.customView;
     [innerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 8.0f, 0.0f, 0.0f)];
+    [innerBtn setFrame:CGRectMake(innerBtn.frame.origin.x, innerBtn.frame.origin.y, innerBtn.frame.size.width + 5, innerBtn.frame.size.height)];
+    [innerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:11.0f]];
+    
     
     UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
     [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
