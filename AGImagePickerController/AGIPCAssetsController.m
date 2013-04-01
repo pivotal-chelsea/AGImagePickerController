@@ -230,18 +230,12 @@
                                                 UITextAttributeFont: [UIFont systemFontOfSize:19.0]}];
     
     // Navigation Bar Items
-    [UIUtils addLeftBarButtonFor:self
-                withDefaultImage:@"blank_btn_back.png"
-                      andOnImage:@"blank_btn_back_tap.png"
-                      withAction:@selector(dismissView:)
-                           title:NSLocalizedString(@"ALBUM_SCREEN_TITLE", nil)];
     
-    // Shift leftBarButton title to right
-    UIButton *innerBtn = (UIButton *)self.navigationItem.leftBarButtonItem.customView;
-    [innerBtn setTitleEdgeInsets:UIEdgeInsetsMake(0.0f, 8.0f, 0.0f, 0.0f)];
-    [innerBtn setFrame:CGRectMake(innerBtn.frame.origin.x, innerBtn.frame.origin.y, innerBtn.frame.size.width + 5, innerBtn.frame.size.height)];
-    [innerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:11.0f]];
+    UIButton *cancelButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"CANCEL_BUTTON_TITLE", nil)];
+    [cancelButton addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
+	self.navigationItem.leftBarButtonItem = cancelButtonItem;
     
     UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
     [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -368,9 +362,9 @@
     [self.imagePickerController performSelector:@selector(didFinishPickingAssets:) withObject:self.selectedAssets];
 }
 
-- (void)dismissView:(id)sender
+- (void)cancelAction:(id)sender
 {
-    [self.navigationController popViewControllerAnimated:ANIMATE];
+    [self.imagePickerController performSelector:@selector(didCancelPickingAssets)];
 }
 
 - (void)selectAllAction:(id)sender
