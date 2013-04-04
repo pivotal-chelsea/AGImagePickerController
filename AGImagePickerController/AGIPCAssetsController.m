@@ -454,7 +454,7 @@
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self loadAssets];
 }
 
 - (void)didChangeToolbarItemsForManagingTheSelection:(NSNotification *)notification
