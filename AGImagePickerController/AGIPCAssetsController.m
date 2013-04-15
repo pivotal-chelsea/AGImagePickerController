@@ -199,18 +199,6 @@
 
 #pragma mark - View Lifecycle
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    [self reloadData];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     // Reset the number of selections
@@ -268,6 +256,18 @@
     
     // Destroy Notifications
     [self unregisterFromNotifications];
+}
+
+#pragma mark - Rotation
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // iOS5
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (BOOL)shouldAutorotate // iOS6
+{
+    return NO;
 }
 
 #pragma mark - Private
