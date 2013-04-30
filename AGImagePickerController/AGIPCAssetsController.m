@@ -345,7 +345,8 @@
     [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
     
     [self.tableView reloadData];
-    [self setTitle:[self.assetsGroup valueForProperty:ALAssetsGroupPropertyName]];
+//    [self setTitle:[self.assetsGroup valueForProperty:ALAssetsGroupPropertyName]];
+    [self setTitle:NSLocalizedString(@"PICK_PHOTOS_NAVIGATION_BAR_TITLE", nil)];
     [self changeSelectionInformation];
     
     NSInteger totalRows = [self.tableView numberOfRowsInSection:0];
