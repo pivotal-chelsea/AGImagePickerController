@@ -17,6 +17,7 @@
 #import "AGIPCToolbarItem.h"
 #import "UIUtils.h"
 #import "NimbusCore.h"
+#import "TrackingHelper.h"
 
 @interface AGIPCAssetsController ()
 {
@@ -248,6 +249,8 @@
     [self registerForNotifications];
     
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
+    
+    [TrackingHelper trackGalleryPage];
 }
 
 - (void)viewDidUnload
