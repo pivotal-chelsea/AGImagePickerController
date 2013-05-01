@@ -7,8 +7,7 @@
 //  
 //  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
-//  
-
+//
 #import "AGIPCAssetsController.h"
 
 #import "AGImagePickerController+Helper.h"
@@ -26,6 +25,7 @@
 }
 
 @property (nonatomic, strong) NSMutableArray *assets;
+@property (nonatomic) BOOL reloadingAssets;
 
 @end
 
@@ -308,8 +308,8 @@
     
     __ag_weak AGIPCAssetsController *weakSelf = self;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        
+    SF_DISPATCH_ASYNC(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+    
         __strong AGIPCAssetsController *strongSelf = weakSelf;
         
         @autoreleasepool {
@@ -326,6 +326,12 @@
                 {
                     gridItem.selected = YES;
                 }
+                
+                if (self.reloadingAssets && (index == (strongSelf.assetsGroup.numberOfAssets - 1))) {
+                    gridItem.selected = YES;
+                    self.reloadingAssets = NO;
+                }
+             
                 [strongSelf.assets addObject:gridItem];
             }];
         }
@@ -455,6 +461,7 @@
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
+    self.reloadingAssets = YES;
     [self loadAssets];
 }
 
