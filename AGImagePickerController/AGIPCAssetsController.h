@@ -21,7 +21,9 @@
 @property (readonly, ag_weak) NSArray *selectedAssets;
 @property (strong) AGImagePickerController *imagePickerController;
 
+@property (nonatomic) int numberOfNewAssetsAdded;
+
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController andAssetsGroup:(ALAssetsGroup *)assetsGroup;
-- (void)didChangeLibrary:(NSNotification *)notification;
+- (void)loadAssets;
 
 @end

@@ -276,6 +276,7 @@ static NSString *PhotoAlbumCellIdentifier = @"Cell";
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
+    NSLog(@"================> WHEN IS THIS CALLED!!!!%@", @"Im CALLED");
     [self loadAssetsGroups];
 }
 

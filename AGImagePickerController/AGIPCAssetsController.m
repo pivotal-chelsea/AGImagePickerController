@@ -54,6 +54,9 @@
 - (void)deselectAllAction:(id)sender;
 - (void)customBarButtonItemAction:(id)sender;
 
+// SPIKEY
+//@property (nonatomic) int previousNumberOfAssets;
+
 @end
 
 @implementation AGIPCAssetsController
@@ -201,7 +204,7 @@
 #pragma mark - View Lifecycle
 
 - (void)viewWillAppear:(BOOL)animated
-{
+{    
     // Reset the number of selections
     [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
     
@@ -263,12 +266,7 @@
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // iOS5
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (BOOL)shouldAutorotate // iOS6
+- (BOOL)shouldAutorotate
 {
     return NO;
 }
@@ -307,6 +305,7 @@
 
 - (void)loadAssets
 {
+    int oldNumberOfAssets = self.assets.count;
     [self.assets removeAllObjects];
     
     __ag_weak AGIPCAssetsController *weakSelf = self;
@@ -315,36 +314,42 @@
     
         __strong AGIPCAssetsController *strongSelf = weakSelf;
         
+        __block int additionalIncrementor = 0;
+        
         @autoreleasepool {
             [strongSelf.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 
-                if (result == nil) 
-                {
+                if (oldNumberOfAssets != 0) {
+                    strongSelf.numberOfNewAssetsAdded = [strongSelf.assetsGroup numberOfAssets] - oldNumberOfAssets;
+                }
+                
+                if (result == nil) {
                     return;
                 }
                 
                 AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:strongSelf.imagePickerController asset:result andDelegate:strongSelf];
+                
                 if ( strongSelf.imagePickerController.selection != nil && 
-                    [strongSelf.imagePickerController.selection containsObject:result])
-                {
+                    [strongSelf.imagePickerController.selection containsObject:result]) {
                     gridItem.selected = YES;
                 }
                 
-                if (self.reloadingAssets && (index == (strongSelf.assetsGroup.numberOfAssets - 1))) {
-                    gridItem.selected = YES;
-                    self.reloadingAssets = NO;
+                if (strongSelf.numberOfNewAssetsAdded > 0) {
+                    for(int i = 1; i <= strongSelf.numberOfNewAssetsAdded; i++) {
+                        if(index == (strongSelf.assetsGroup.numberOfAssets - i)) {
+                            gridItem.selected = YES;
+                            additionalIncrementor++;
+                        }
+                    }
                 }
              
                 [strongSelf.assets addObject:gridItem];
-            }];
+            }]; 
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             [strongSelf reloadData];
-            
         });
-        
     });
 }
 
@@ -449,10 +454,10 @@
 
 - (void)registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(didChangeLibrary:) 
-                                                 name:ALAssetsLibraryChangedNotification 
-                                               object:[AGImagePickerController defaultAssetsLibrary]];
+//    [[NSNotificationCenter defaultCenter] addObserver:self 
+//                                             selector:@selector(didChangeLibrary:) 
+//                                                 name:ALAssetsLibraryChangedNotification 
+//                                               object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
 - (void)unregisterFromNotifications
@@ -464,6 +469,16 @@
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
+    NSLog(@"================> Notifications: %@", notification);
+    
+    if([notification.userInfo count] == 0 || notification.userInfo[@"ALAssetLibraryUpdatedAssetGroupsKey"] == nil)
+    {
+        NSLog(@"================> BLOCKED notification -->>%@", @"This isn't doing nada!!");
+        return;
+    }
+    
+    self.numberOfNewAssetsAdded++;
+
     self.reloadingAssets = YES;
     [self loadAssets];
 }
