@@ -130,7 +130,7 @@ andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop
         self.toolbar.translucent = YES;
         
         self.toolbarItemsForManagingTheSelection = toolbarItemsForManagingTheSelection;
-        self.selection = nil;
+        self.selection = [[NSMutableArray alloc] init];
         self.maximumNumberOfPhotosToBeSelected = maximumNumberOfPhotosToBeSelected;
         self.delegate = delegate;
         self.didFailBlock = failureBlock;

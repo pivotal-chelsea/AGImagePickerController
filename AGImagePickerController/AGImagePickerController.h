@@ -63,7 +63,7 @@ shouldShowToolbarForManagingTheSelectionInSelectionMode:(AGImagePickerController
     NSUInteger _maximumNumberOfPhotosToBeSelected;
     
     NSArray *_toolbarItemsForManagingTheSelection;
-    NSArray *_selection;
+    NSMutableArray *_selection;
 }
 
 @property (nonatomic) BOOL shouldChangeStatusBarStyle;
@@ -76,7 +76,7 @@ shouldShowToolbarForManagingTheSelectionInSelectionMode:(AGImagePickerController
 @property (nonatomic, copy) AGIPCDidFinish didFinishBlock;
 
 @property (nonatomic, strong) NSArray *toolbarItemsForManagingTheSelection;
-@property (nonatomic, strong) NSArray *selection;
+@property (nonatomic, strong) NSMutableArray *selection;
 
 @property (nonatomic, readonly) AGImagePickerControllerSelectionMode selectionMode;
 
