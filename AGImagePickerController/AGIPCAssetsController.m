@@ -231,7 +231,7 @@
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     doneButtonItem.enabled = NO;
 	self.navigationItem.rightBarButtonItem = doneButtonItem;
-    
+
     [super viewWillAppear:animated];
 }
 
@@ -301,6 +301,7 @@
 
 - (void)loadAssets
 {
+    NSLog(@"================> LOADIE: %d", self.assets.count);
     int oldNumberOfAssets = self.assets.count;
     __block int numberOfNewAssetsAdded = 0;
     [self.assets removeAllObjects];
@@ -312,6 +313,7 @@
         __strong AGIPCAssetsController *strongSelf = weakSelf;
         
         @autoreleasepool {
+            NSLog(@"================> START ENUMERATION" );
             [strongSelf.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 
                 if (result == nil) {
@@ -327,12 +329,14 @@
              
                 [strongSelf.assets addObject:gridItem];
             }];
+            NSLog(@"================> END ENUMERATION" );
         }
         
         if (oldNumberOfAssets != 0) {
             numberOfNewAssetsAdded = self.assets.count - oldNumberOfAssets;
         }
         
+        NSLog(@"================> START CHECKING FOR SELECTED" );
         for (int i=0; i < numberOfNewAssetsAdded; i++) {
             if (numberOfNewAssetsAdded > 0) {
                 int index = (self.assets.count - 1) - i;
@@ -340,11 +344,25 @@
                 gridItem.selected = YES;
             }
         }
+        NSLog(@"================> END CHECKING FOR SELECTION");
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [strongSelf reloadData];
         });
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf enableControl];
+        });
+        
+        NSLog(@"================> DONE_LOADIE");
     });
+    
+    NSLog(@"================> OUT OF LOOP");
+}
+
+- (void)enableControl
+{
+    [self.imagePickerController triggerEnumerationCallback];
 }
 
 - (void)reloadData
@@ -471,6 +489,8 @@
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
+    NSLog(@"================> Did change library");
+//    NSLog(@"================> didChangeLibrary %@", notification);
     [self loadAssets];
 }
 

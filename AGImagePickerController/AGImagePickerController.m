@@ -142,6 +142,14 @@ andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop
     return self;
 }
 
+
+- (void)triggerEnumerationCallback
+{
+    if (self.delegate) {
+        [self.delegate performSelector:@selector(agImagePickerController_pickerEnumeratedAssets:) withObject:self];
+    }
+}
+
 #pragma mark - View lifecycle
 
 - (NSUInteger)supportedInterfaceOrientations

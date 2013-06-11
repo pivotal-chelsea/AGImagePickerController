@@ -38,6 +38,8 @@ shouldShowToolbarForManagingTheSelectionInSelectionMode:(AGImagePickerController
 - (void)agImagePickerController:(AGImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info;
 - (void)agImagePickerController:(AGImagePickerController *)picker didFail:(NSError *)error;
 
+- (void)agImagePickerController_pickerEnumeratedAssets:(AGImagePickerController *)picker;
+
 @end
 
 @interface AGImagePickerController : UINavigationController
@@ -92,6 +94,8 @@ maximumNumberOfPhotosToBeSelected:(NSUInteger)maximumNumberOfPhotosToBeSelected
 shouldChangeStatusBarStyle:(BOOL)shouldChangeStatusBarStyle
 toolbarItemsForManagingTheSelection:(NSArray *)toolbarItemsForManagingTheSelection
 andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop;
+
+- (void)triggerEnumerationCallback;
 
 @end
 
