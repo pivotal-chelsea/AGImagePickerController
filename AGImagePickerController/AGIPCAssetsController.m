@@ -4,7 +4,7 @@
 //
 //  Created by Artur Grigor on 17.02.2012.
 //  Copyright (c) 2012 - 2013 Artur Grigor. All rights reserved.
-//  
+//
 //  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
 //
@@ -84,7 +84,7 @@
         {
             _assetsGroup = theAssetsGroup;
             [_assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
-
+            
             [self reloadData];
         }
     }
@@ -106,10 +106,10 @@
 {
     NSMutableArray *selectedAssets = [NSMutableArray array];
     
-	for (AGIPCGridItem *gridItem in self.assets) 
-    {		
+	for (AGIPCGridItem *gridItem in self.assets)
+    {
 		if (gridItem.selected)
-        {	
+        {
 			[selectedAssets addObject:gridItem.asset];
 		}
 	}
@@ -159,15 +159,13 @@
 {
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:self.imagePickerController.numberOfItemsPerRow];
     
-    NSUInteger startIndex = indexPath.row * self.imagePickerController.numberOfItemsPerRow, 
-                 endIndex = startIndex + self.imagePickerController.numberOfItemsPerRow - 1;
-    if (startIndex < self.assets.count)
-    {
+    NSUInteger startIndex = indexPath.row * self.imagePickerController.numberOfItemsPerRow,
+    endIndex = startIndex + self.imagePickerController.numberOfItemsPerRow - 1;
+    if (startIndex < self.assets.count) {
         if (endIndex > self.assets.count - 1)
             endIndex = self.assets.count - 1;
         
-        for (NSUInteger i = startIndex; i <= endIndex; i++)
-        {
+        for (NSUInteger i = startIndex; i <= endIndex; i++) {
             [items addObject:(self.assets)[i]];
         }
     }
@@ -180,12 +178,9 @@
     static NSString *CellIdentifier = @"Cell";
     
     AGIPCGridCell *cell = (AGIPCGridCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) 
-    {		        
+    if (cell == nil) {
         cell = [[AGIPCGridCell alloc] initWithImagePickerController:self.imagePickerController items:[self itemsForRowAtIndexPath:indexPath] andReuseIdentifier:CellIdentifier];
-    }	
-	else 
-    {		
+    } else {
 		cell.items = [self itemsForRowAtIndexPath:indexPath];
 	}
     
@@ -277,8 +272,7 @@
 
 - (void)setupToolbarItems
 {
-    if (self.imagePickerController.toolbarItemsForManagingTheSelection != nil)
-    {
+    if (self.imagePickerController.toolbarItemsForManagingTheSelection != nil) {
         NSMutableArray *items = [NSMutableArray array];
         
         // Custom Toolbar Items
@@ -312,7 +306,7 @@
     __ag_weak AGIPCAssetsController *weakSelf = self;
     
     SF_DISPATCH_ASYNC(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-    
+        
         __strong AGIPCAssetsController *strongSelf = weakSelf;
         
         @autoreleasepool {
@@ -334,7 +328,7 @@
                     gridItem.selected = YES;
                     self.reloadingAssets = NO;
                 }
-             
+                
                 [strongSelf.assets addObject:gridItem];
             }];
         }
@@ -360,9 +354,9 @@
     
     NSInteger totalRows = [self.tableView numberOfRowsInSection:0];
     
-    //Prevents crash if totalRows = 0 (when the album is empty). 
+    //Prevents crash if totalRows = 0 (when the album is empty).
     if (totalRows > 0) {
-
+        
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:totalRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
 }
@@ -449,23 +443,38 @@
 
 - (void)registerForNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(didChangeLibrary:) 
-                                                 name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didChangeLibrary:)
+                                                 name:ALAssetsLibraryChangedNotification
                                                object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
 - (void)unregisterFromNotifications
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:ALAssetsLibraryChangedNotification 
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:ALAssetsLibraryChangedNotification
                                                   object:[AGImagePickerController defaultAssetsLibrary]];
 }
 
 - (void)didChangeLibrary:(NSNotification *)notification
 {
-    self.reloadingAssets = YES;
-    [self loadAssets];
+    if (!notification.userInfo) {
+        return;
+    }
+    
+    NSUInteger index = self.assetsGroup.numberOfAssets-1;
+    [self.assetsGroup enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:index]
+                                       options:NULL usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                                           if (!result) {
+                                               return;
+                                           }
+
+                                           AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController asset:result andDelegate:self];
+                                           gridItem.selected = YES;
+                                           
+                                           [self.assets addObject:gridItem];
+                                           [self reloadData];
+                                       }];
 }
 
 - (void)didChangeToolbarItemsForManagingTheSelection:(NSNotification *)notification
