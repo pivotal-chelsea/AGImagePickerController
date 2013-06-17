@@ -158,6 +158,9 @@ andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop
     // Reset the number of selections
     [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
     
+    // Reset selected grid items
+    [self.selection removeAllObjects];
+    
     if (self.didFinishBlock)
         self.didFinishBlock(selectedAssets);
     
@@ -173,6 +176,9 @@ andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop
     
     // Reset the number of selections
     [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
+    
+    // Reset selected grid items
+    [self.selection removeAllObjects];
     
     if (self.didFailBlock)
         self.didFailBlock(nil);
