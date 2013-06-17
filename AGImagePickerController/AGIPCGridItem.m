@@ -10,6 +10,7 @@
 //  
 
 #import "AGIPCGridItem.h"
+#import "NimbusCore.h"
 
 
 #import "AGImagePickerController+Helper.h"
@@ -142,8 +143,7 @@ static NSUInteger numberOfSelectedGridItems = 0;
 		[self addSubview:self.thumbnailImageView];
         
         self.selectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
-        self.selectionView.backgroundColor = [UIColor blackColor];
-        self.selectionView.alpha = .5f;
+        self.selectionView.backgroundColor = RGBACOLOR(242, 175, 0, 0.7f);
         self.selectionView.hidden = !self.selected;
         [self addSubview:self.selectionView];
         

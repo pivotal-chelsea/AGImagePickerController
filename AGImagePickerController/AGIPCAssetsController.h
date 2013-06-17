@@ -22,6 +22,5 @@
 @property (strong) AGImagePickerController *imagePickerController;
 
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController andAssetsGroup:(ALAssetsGroup *)assetsGroup;
-- (void)didChangeLibrary:(NSNotification *)notification;
 
 @end

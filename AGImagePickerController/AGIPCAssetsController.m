@@ -26,7 +26,6 @@
 }
 
 @property (nonatomic, strong) NSMutableArray *assets;
-@property (nonatomic) BOOL reloadingAssets;
 
 @end
 
@@ -258,12 +257,7 @@
 
 #pragma mark - Rotation
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation // iOS5
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (BOOL)shouldAutorotate // iOS6
+- (BOOL)shouldAutorotate
 {
     return NO;
 }
@@ -301,6 +295,8 @@
 
 - (void)loadAssets
 {
+    int oldNumberOfAssets = self.assets.count;
+    __block int numberOfNewAssetsAdded = 0;
     [self.assets removeAllObjects];
     
     __ag_weak AGIPCAssetsController *weakSelf = self;
@@ -312,33 +308,36 @@
         @autoreleasepool {
             [strongSelf.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
                 
-                if (result == nil) 
-                {
+                if (result == nil) {
                     return;
                 }
                 
                 AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:strongSelf.imagePickerController asset:result andDelegate:strongSelf];
-                if ( strongSelf.imagePickerController.selection != nil && 
-                    [strongSelf.imagePickerController.selection containsObject:result])
-                {
-                    gridItem.selected = YES;
-                }
                 
-                if (self.reloadingAssets && (index == (strongSelf.assetsGroup.numberOfAssets - 1))) {
+                if (strongSelf.imagePickerController.selection != nil &&
+                    [strongSelf.imagePickerController.selection containsObject:result]) {
                     gridItem.selected = YES;
-                    self.reloadingAssets = NO;
                 }
                 
                 [strongSelf.assets addObject:gridItem];
             }];
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [strongSelf reloadData];
-            
-        });
+        if (oldNumberOfAssets != 0) {
+            numberOfNewAssetsAdded = self.assets.count - oldNumberOfAssets;
+        }
         
+        for (int i=0; i < numberOfNewAssetsAdded; i++) {
+            if (numberOfNewAssetsAdded > 0) {
+                int index = (self.assets.count - 1) - i;
+                AGIPCGridItem *gridItem = self.assets[index];
+                gridItem.selected = YES;
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf reloadData];
+        });
     });
 }
 
@@ -348,7 +347,6 @@
     [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
     
     [self.tableView reloadData];
-//    [self setTitle:[self.assetsGroup valueForProperty:ALAssetsGroupPropertyName]];
     [self setTitle:NSLocalizedString(@"PICK_PHOTOS_NAVIGATION_BAR_TITLE", nil)];
     [self changeSelectionInformation];
     
@@ -414,6 +412,15 @@
 }
 
 #pragma mark - AGGridItemDelegate Methods
+
+- (void)agGridItem:(AGIPCGridItem *)gridItem didChangeSelectionState:(NSNumber *)selected
+{
+    if ([selected boolValue]) {
+        [self.imagePickerController.selection addObject:gridItem.asset];
+    } else {
+        [self.imagePickerController.selection removeObject:gridItem.asset];
+    }
+}
 
 - (void)agGridItem:(AGIPCGridItem *)gridItem didChangeNumberOfSelections:(NSNumber *)numberOfSelections
 {
