@@ -99,14 +99,12 @@ static NSUInteger numberOfSelectedGridItems = 0;
 
 - (void)setAsset:(ALAsset *)asset
 {
-    @synchronized (self)
-    {
-        if (_asset != asset)
-        {
+    SF_DISPATCH_ASYNC(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),  ^{
+        if (_asset != asset) {
             _asset = asset;
-            self.thumbnailImageView.image = [UIImage imageWithCGImage:_asset.thumbnail];
+            self.thumbnailImageView.image = [UIImage imageWithCGImage:_asset.aspectRatioThumbnail];
         }
-    }
+    });
 }
 
 - (ALAsset *)asset
