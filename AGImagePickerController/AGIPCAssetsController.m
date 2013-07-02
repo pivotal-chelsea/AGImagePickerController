@@ -194,42 +194,6 @@
 
 #pragma mark - View Lifecycle
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    // Reset the number of selections
-    [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
-    
-    [self.navigationController.navigationBar setBackgroundImage:[UIUtils
-                                                                 imageWithSize:self.navigationController.navigationBar.frame.size
-                                                                 andColor:[UIColor whiteColor]]
-                                                  forBarMetrics:UIBarMetricsDefault];
-    
-    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
-    [self.navigationController.navigationBar setTranslucent:NO];
-    
-    UIColor *grayTitleColor = RGBCOLOR(51.0, 51.0, 51.0);
-    [self.navigationController.navigationBar setTitleTextAttributes:@{UITextAttributeTextColor : grayTitleColor,
-                                   UITextAttributeTextShadowOffset : [NSValue valueWithUIOffset:UIOffsetZero],
-                                                UITextAttributeFont: [UIFont systemFontOfSize:19.0]}];
-    
-    // Navigation Bar Items
-    
-    UIButton *cancelButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"CANCEL_BUTTON_TITLE", nil)];
-    [cancelButton addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
-	self.navigationItem.leftBarButtonItem = cancelButtonItem;
-    
-    UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
-    [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
-    doneButtonItem.enabled = NO;
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
-    
-    [super viewWillAppear:animated];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -245,6 +209,16 @@
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
     
     [TrackingHelper trackGalleryPage];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    // Reset the number of selections
+    [AGIPCGridItem performSelector:@selector(resetNumberOfSelections)];
+    
+    [self setupNavBar];
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidUnload
@@ -263,6 +237,41 @@
 }
 
 #pragma mark - Private
+
+- (void)setupNavBar
+{
+    [self.navigationController.navigationBar setBackgroundImage:[UIUtils
+                                                                 imageWithSize:self.navigationController.navigationBar.frame.size
+                                                                 andColor:[UIColor whiteColor]]
+                                                  forBarMetrics:UIBarMetricsDefault];
+    
+    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
+    [self.navigationController.navigationBar setTranslucent:NO];
+    
+    UIColor *grayTitleColor = RGBCOLOR(51.0, 51.0, 51.0);
+    [self.navigationController.navigationBar setTitleTextAttributes:@{UITextAttributeTextColor : grayTitleColor,
+                                   UITextAttributeTextShadowOffset : [NSValue valueWithUIOffset:UIOffsetZero],
+                                                UITextAttributeFont: [UIFont systemFontOfSize:19.0]}];
+    
+    // Navigation Bar Items
+    
+    if (!self.navigationItem.leftBarButtonItem) {
+        UIButton *cancelButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"CANCEL_BUTTON_TITLE", nil)];
+        [cancelButton addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
+
+        UIBarButtonItem *cancelButtonItem = [[UIBarButtonItem alloc] initWithCustomView:cancelButton];
+        self.navigationItem.leftBarButtonItem = cancelButtonItem;
+    }
+    
+    if (!self.navigationItem.rightBarButtonItem) {
+        UIButton *doneButton = [UIUtils styledButtonWithTitle:NSLocalizedString(@"ADD_BUTTON_TITLE", nil)];
+        [doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
+        doneButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem = doneButtonItem;
+    }
+}
 
 - (void)setupToolbarItems
 {
