@@ -425,7 +425,9 @@
 - (void)agGridItem:(AGIPCGridItem *)gridItem didChangeSelectionState:(NSNumber *)selected
 {
     if ([selected boolValue]) {
-        [self.imagePickerController.selection addObject:gridItem.asset];
+        if (gridItem.asset) {
+            [self.imagePickerController.selection addObject:gridItem.asset];
+        }
     } else {
         [self.imagePickerController.selection removeObject:gridItem.asset];
     }
