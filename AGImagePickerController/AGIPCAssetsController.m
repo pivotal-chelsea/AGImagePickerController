@@ -16,7 +16,7 @@
 #import "AGIPCToolbarItem.h"
 #import "UIUtils.h"
 #import "NimbusCore.h"
-#import "TrackingHelper.h"
+#import "HamTrackingHelper.h"
 
 @interface AGIPCAssetsController ()
 {
@@ -208,7 +208,7 @@
     
     self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
     
-    [TrackingHelper trackGalleryPage];
+    [HamTrackingHelper trackGalleryPage];
 }
 
 - (void)viewWillAppear:(BOOL)animated
