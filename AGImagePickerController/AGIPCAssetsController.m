@@ -206,8 +206,6 @@
     // Setup Notifications
     [self registerForNotifications];
     
-    self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"roughcloth.png"]];
-    
     [HamTrackingHelper trackGalleryPage];
 }
 
