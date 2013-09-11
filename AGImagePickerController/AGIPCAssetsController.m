@@ -77,28 +77,13 @@
 
 - (void)setAssetsGroup:(ALAssetsGroup *)theAssetsGroup
 {
-    @synchronized (self)
+    if (_assetsGroup != theAssetsGroup)
     {
-        if (_assetsGroup != theAssetsGroup)
-        {
-            _assetsGroup = theAssetsGroup;
-            [_assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
-            
-            [self reloadData];
-        }
+        _assetsGroup = theAssetsGroup;
+        [_assetsGroup setAssetsFilter:[ALAssetsFilter allPhotos]];
+        
+        [self reloadData];
     }
-}
-
-- (ALAssetsGroup *)assetsGroup
-{
-    ALAssetsGroup *ret = nil;
-    
-    @synchronized (self)
-    {
-        ret = _assetsGroup;
-    }
-    
-    return ret;
 }
 
 - (NSArray *)selectedAssets
@@ -303,49 +288,39 @@
 - (void)loadAssets
 {
     int oldNumberOfAssets = self.assets.count;
-    __block int numberOfNewAssetsAdded = 0;
+    int numberOfNewAssetsAdded = 0;
+    
     [self.assets removeAllObjects];
     
-    __ag_weak AGIPCAssetsController *weakSelf = self;
+    [self.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+        
+        if (result == nil) return;
+        
+        AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
+                                                                                 asset:result
+                                                                           andDelegate:self];
+        
+        if (self.imagePickerController.selection != nil &&
+            [self.imagePickerController.selection containsObject:result]) {
+            gridItem.selected = YES;
+        }
+        
+        [self.assets addObject:gridItem];
+    }];
     
-    SF_DISPATCH_ASYNC(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        
-        __strong AGIPCAssetsController *strongSelf = weakSelf;
-        
-        @autoreleasepool {
-            [strongSelf.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                
-                if (result == nil) {
-                    return;
-                }
-                
-                AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:strongSelf.imagePickerController asset:result andDelegate:strongSelf];
-                
-                if (strongSelf.imagePickerController.selection != nil &&
-                    [strongSelf.imagePickerController.selection containsObject:result]) {
-                    gridItem.selected = YES;
-                }
-                
-                [strongSelf.assets addObject:gridItem];
-            }];
+    if (oldNumberOfAssets != 0) {
+        numberOfNewAssetsAdded = self.assets.count - oldNumberOfAssets;
+    }
+    
+    for (int i = 0; i < numberOfNewAssetsAdded; i++) {
+        if (numberOfNewAssetsAdded > 0) {
+            int index = (self.assets.count - 1) - i;
+            AGIPCGridItem *gridItem = self.assets[index];
+            gridItem.selected = YES;
         }
-        
-        if (oldNumberOfAssets != 0) {
-            numberOfNewAssetsAdded = self.assets.count - oldNumberOfAssets;
-        }
-        
-        for (int i=0; i < numberOfNewAssetsAdded; i++) {
-            if (numberOfNewAssetsAdded > 0) {
-                int index = (self.assets.count - 1) - i;
-                AGIPCGridItem *gridItem = self.assets[index];
-                gridItem.selected = YES;
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [strongSelf reloadData];
-        });
-    });
+    }
+    
+    [self reloadData];
 }
 
 - (void)reloadData

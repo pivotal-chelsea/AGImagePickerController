@@ -16,7 +16,7 @@
 
 @interface AGIPCAlbumsController : UITableViewController<UITableViewDataSource, UITableViewDelegate>
 
-@property (strong) AGImagePickerController *imagePickerController;
+@property (nonatomic, strong) AGImagePickerController *imagePickerController;
 
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController;
 

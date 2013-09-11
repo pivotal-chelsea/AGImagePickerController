@@ -30,14 +30,14 @@
 
 }
 
-@property (assign) BOOL selected;
-@property (strong) ALAsset *asset;
+@property (nonatomic, assign) BOOL selected;
+@property (nonatomic, strong) ALAsset *asset;
 @property (nonatomic, strong) UIView *selectionView;
 @property (nonatomic, strong) UIImageView *checkmarkImageView;
 
 @property (nonatomic, weak) id<AGIPCGridItemDelegate> delegate;
 
-@property (strong) AGImagePickerController *imagePickerController;
+@property (nonatomic, strong) AGImagePickerController *imagePickerController;
 
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController andAsset:(ALAsset *)asset;
 - (id)initWithImagePickerController:(AGImagePickerController *)imagePickerController asset:(ALAsset *)asset andDelegate:(id<AGIPCGridItemDelegate>)delegate;

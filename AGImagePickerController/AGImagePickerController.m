@@ -144,9 +144,14 @@ andShouldShowSavedPhotosOnTop:(BOOL)shouldShowSavedPhotosOnTop
 
 #pragma mark - View lifecycle
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return NO;
+}
+
 - (NSUInteger)supportedInterfaceOrientations
 {
-    return UIInterfaceOrientationMaskAll;
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 #pragma mark - Private

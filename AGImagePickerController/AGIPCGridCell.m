@@ -31,30 +31,17 @@
 
 - (void)setItems:(NSArray *)items
 {
-    @synchronized (self)
+    if (_items != items)
     {
-        if (_items != items)
+        for (AGIPCGridItem *view in [self subviews])
         {
-            for (UIView *view in [self subviews]) 
-            {		
+            if ([view isKindOfClass:[AGIPCGridItem class]]){
                 [view removeFromSuperview];
             }
-            
-            _items = items;
         }
+        
+        _items = items;
     }
-}
-
-- (NSArray *)items
-{
-    NSArray *array = nil;
-    
-    @synchronized (self)
-    {
-        array = _items;
-    }
-    
-    return array;
 }
 
 #pragma mark - Object Lifecycle
