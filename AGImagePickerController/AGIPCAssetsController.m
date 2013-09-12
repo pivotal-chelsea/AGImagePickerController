@@ -462,15 +462,13 @@
                                             return;
                                         }
                                         
-                                        if (index == self.assets.count) {
-                                            AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
-                                                                                                                     asset:result
-                                                                                                               andDelegate:self];
-                                            gridItem.selected = YES;
-                                            
-                                            [self.assets addObject:gridItem];
-                                            [self reloadData];
-                                        }
+                                        AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
+                                                                                                                 asset:result
+                                                                                                           andDelegate:self];
+                                        gridItem.selected = YES;
+                                        
+                                        [self.assets addObject:gridItem];
+                                        [self reloadData];
                                     }];
 }
 
