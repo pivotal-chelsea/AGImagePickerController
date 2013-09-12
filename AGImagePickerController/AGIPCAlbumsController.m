@@ -263,7 +263,7 @@ static NSString *PhotoAlbumCellIdentifier = @"Cell";
 {
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(didChangeLibrary:) 
-                                                 name:ALAssetsLibraryChangedNotification 
+                                                 name:ALAssetsLibraryChangedNotification
                                                object:[AGImagePickerController defaultAssetsLibrary]];
 }
 

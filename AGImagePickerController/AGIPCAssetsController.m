@@ -453,19 +453,25 @@
         return;
     }
     
-    NSUInteger index = self.assetsGroup.numberOfAssets-1;
+    NSUInteger index = self.assetsGroup.numberOfAssets - 1;
+    
     [self.assetsGroup enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:index]
-                                       options:NULL usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-                                           if (!result) {
-                                               return;
-                                           }
-
-                                           AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController asset:result andDelegate:self];
-                                           gridItem.selected = YES;
-                                           
-                                           [self.assets addObject:gridItem];
-                                           [self reloadData];
-                                       }];
+                                       options:nil
+                                    usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                                        if (!result) {
+                                            return;
+                                        }
+                                        
+                                        if (index == self.assets.count) {
+                                            AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
+                                                                                                                     asset:result
+                                                                                                               andDelegate:self];
+                                            gridItem.selected = YES;
+                                            
+                                            [self.assets addObject:gridItem];
+                                            [self reloadData];
+                                        }
+                                    }];
 }
 
 - (void)didChangeToolbarItemsForManagingTheSelection:(NSNotification *)notification
