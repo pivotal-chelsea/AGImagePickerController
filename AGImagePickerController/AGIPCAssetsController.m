@@ -454,6 +454,13 @@
                                             return;
                                         }
                                         
+                                        
+                                        for (AGIPCGridItem *item in self.assets) {
+                                            if ([item.asset.defaultRepresentation.url isEqual:result.defaultRepresentation.url]) {
+                                                return;
+                                            }
+                                        }
+                                        
                                         AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
                                                                                                                  asset:result
                                                                                                            andDelegate:self];
