@@ -292,8 +292,7 @@
     
     [self.assets removeAllObjects];
     
-    [self.assetsGroup enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-        
+    [self.assetsGroup enumerateAssetsWithOptions:NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
         if (result == nil) return;
         
         AGIPCGridItem *gridItem = [[AGIPCGridItem alloc] initWithImagePickerController:self.imagePickerController
@@ -306,6 +305,7 @@
         }
         
         [self.assets addObject:gridItem];
+
     }];
     
     if (oldNumberOfAssets != 0) {
@@ -331,14 +331,6 @@
     [self.tableView reloadData];
     [self setTitle:NSLocalizedString(@"PICK_PHOTOS_NAVIGATION_BAR_TITLE", nil)];
     [self changeSelectionInformation];
-    
-    NSInteger totalRows = [self.tableView numberOfRowsInSection:0];
-    
-    //Prevents crash if totalRows = 0 (when the album is empty).
-    if (totalRows > 0) {
-        
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:totalRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-    }
 }
 
 - (void)doneAction:(id)sender
@@ -467,7 +459,7 @@
                                                                                                            andDelegate:self];
                                         gridItem.selected = YES;
                                         
-                                        [self.assets addObject:gridItem];
+                                        [self.assets insertObject:gridItem atIndex:0];
                                         [self reloadData];
                                     }];
 }
