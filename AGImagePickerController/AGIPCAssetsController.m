@@ -328,7 +328,10 @@
     // Don't display the select button until all the assets are loaded.
     [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
     
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+    
     [self setTitle:NSLocalizedString(@"PICK_PHOTOS_NAVIGATION_BAR_TITLE", nil)];
     [self changeSelectionInformation];
 }
