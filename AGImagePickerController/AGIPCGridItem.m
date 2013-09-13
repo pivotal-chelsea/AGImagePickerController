@@ -94,7 +94,9 @@ static NSUInteger numberOfSelectedGridItems = 0;
     if (_asset != asset) {
         _asset = asset;
         
-        self.thumbnailImageView.image = [UIImage imageWithCGImage:_asset.thumbnail];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.thumbnailImageView.image = [UIImage imageWithCGImage:_asset.thumbnail];
+        });
     }
 }
 
